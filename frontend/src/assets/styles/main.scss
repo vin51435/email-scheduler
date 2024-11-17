@@ -1,0 +1,207 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  padding: 1rem;
+  .react-flow-controls {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    &-save {
+    }
+  }
+  .react-flow_container {
+    border: 2px solid #f3f3f3;
+    border-radius: 5px;
+  }
+}
+
+.node {
+  position: relative;
+  width: 220px;
+  padding: 5px;
+  background-color: #f3f3f3;
+  border: 1px solid rgb(219, 219, 219);
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 0px rgba(214, 214, 214, 1);
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  background-color: white;
+  .icon_span {
+    border: 1px solid red;
+    background-color: rgba(255, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 4px 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    svg {
+      font-size: 1.6rem;
+      color: red;
+    }
+  }
+  .content {
+    padding: 0.5rem 0.8rem;
+    h3 {
+      font-size: medium;
+    }
+    h4 {
+      color: red;
+      margin-top: 2px;
+    }
+  }
+  &:hover {
+    .actions.show {
+      display: flex;
+      opacity: 1;
+    }
+  }
+  .actions {
+    display: none;
+    position: absolute;
+    opacity: 0;
+    top: -12px;
+    right: -8px;
+    transform: scale(1.4);
+    .delete,
+    .edit {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .edit {
+      svg {
+        color: orange;
+        background-color: rgb(255, 226, 171);
+        border: 1px solid orange;
+        padding: 2px;
+        border-radius: 4px;
+      }
+    }
+    .delete {
+      margin-left: 5px;
+      svg {
+        background-color: rgb(255, 212, 212);
+        border: 1px solid red;
+        padding: 2px;
+        color: red;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  &.add-lead-node {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0.5rem 0.3rem;
+    cursor: pointer;
+    p {
+      font-size: small;
+    }
+    h3 {
+      font-size: medium;
+    }
+    span {
+      font-size: medium;
+    }
+  }
+
+  &.sequence-start {
+    .header {
+      text-align: center;
+      margin: auto;
+      padding: 0.5rem 0.8rem;
+    }
+  }
+
+  &.cold-email {
+    .icon_span {
+      border: 1px solid purple;
+      background-color: rgba(255, 0, 128, 0.2);
+      svg {
+        color: purple;
+      }
+    }
+    .content {
+      h4 {
+        color: purple;
+      }
+    }
+  }
+  &.wait-time {
+    .icon_span {
+      border: 1px solid blue;
+      background-color: rgba(0, 0, 255, 0.2);
+      svg {
+        color: blue;
+      }
+    }
+    .content {
+      h4 {
+        color: blue;
+      }
+    }
+  }
+}
+
+.react-flow__handle {
+  opacity: 0;
+  pointer-events: none !important;
+}
+
+.react-flow__edge {
+  color: black;
+}
+
+.ReactModal__Overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .react-modal {
+    height: fit-content;
+    width: fit-content;
+    min-width: 550px;
+    min-height: 500px;
+    background-color: #f3f3f3;
+    border-radius: 4px;
+    padding: 1rem 1.5rem;
+    .rect-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      h2 {
+        margin: 0;
+        padding: 0;
+      }
+      .icon_span {
+        cursor: pointer;
+        border-radius: 4px;
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        svg {
+          font-size: 1.6rem;
+          color: red;
+          transition: all 0.3s ease;
+        }
+        &:hover {
+          svg {
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+  }
+}
+
