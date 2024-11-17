@@ -5,6 +5,18 @@ import { MdOutlineCancelPresentation } from "react-icons/md";
 
 const ReactFlowContext = createContext();
 
+const defaultData = {
+  coldEmail: {
+    label: 'Cold Email',
+    subject: 'Initial Email',
+    body: 'This is the body of the cold email.',
+  },
+  waitDelay: {
+    label: 'Wait/Delay',
+    delay: '5',
+  }
+};
+
 export const ReactFlowContextProvider = memo(({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [nodeType, setNodeType] = useState({ type: null, props: null });
@@ -21,29 +33,27 @@ export const ReactFlowContextProvider = memo(({ children }) => {
   };
 
   const endAddButtonOnNodeTypeSelect = (type, props) => {
-
     closeModal();
 
     const sourceNode = getNode(props.source);
-    const targetNode = getNode(props.target);
 
-    if (!sourceNode || !targetNode) {
+    if (!sourceNode) {
       return;
     }
 
     const newNodeId = `new-${Date.now()}`;
     const newNodePosition = {
-      x: sourceNode.position.x + 110,
-      y: sourceNode.position.y + 100,
+      x: sourceNode.position.x,
+      y: (sourceNode.position.y + sourceNode.width),
     };
+    const newNodeData = type === 'coldEmail' ? defaultData.coldEmail : defaultData.waitDelay;
 
     const newNode = {
       id: newNodeId,
       position: newNodePosition,
-      data: { label: type === 'coldEmail' ? 'Cold Email' : 'Wait/Delay' },
+      data: newNodeData,
       type: type === 'coldEmail' ? 'ColdEmailNode' : 'WaitDelayNode',
     };
-
 
     setNodes((nodes) => [...nodes, newNode]);
 
@@ -69,22 +79,8 @@ export const ReactFlowContextProvider = memo(({ children }) => {
     const newNodeId = `new-${Date.now()}`;
 
     const newNodePosition = {
-
       x: ((source.position.x + target.position.x) / 2),
-
       y: ((source.position.y + target.position.y) / 2) + 60,
-    };
-
-    const defaultData = {
-      coldEmail: {
-        label: 'Cold Email',
-        subject: 'Initial Email',
-        body: 'This is the body of the cold email.',
-      },
-      waitDelay: {
-        label: 'Wait/Delay',
-        delay: '5',
-      }
     };
 
     const newNodeData = type === 'coldEmail' ? defaultData.coldEmail : defaultData.waitDelay;
@@ -97,7 +93,6 @@ export const ReactFlowContextProvider = memo(({ children }) => {
     };
 
     setNodes((nodes) => {
-
       const updatedNodes = [
         ...nodes.map((node) => {
           if (node.id === props.source) {
@@ -305,13 +300,31 @@ export const ReactFlowContextProvider = memo(({ children }) => {
     const nodeId = id;
 
     setEdges((prevEdges) => {
+      const connectedEdges = prevEdges.filter(
+        (edge) => edge.source === nodeId || edge.target === nodeId
+      );
 
-      const connectedEdges = prevEdges.filter((edge) => edge.source === nodeId || edge.target === nodeId);
+      if (connectedEdges.some((edge) => edge.type === 'endAddButton')) {
+        const updatedEdges = prevEdges.filter(
+          (edge) => edge.source !== nodeId && edge.target !== nodeId
+        );
 
+        connectedEdges.forEach((edge) => {
+          if (edge.type !== 'endAddButton') {
+            const newEdge = {
+              id: `${edge.source}-${Date.now()}`,
+              source: edge.source,
+              target: edge.source,
+              type: 'endAddButton',
+            };
+            updatedEdges.push(newEdge);
+          }
+        });
+        return updatedEdges;
+      }
 
       const sourceEdge = connectedEdges.find((edge) => edge.target === nodeId);
       const targetEdge = connectedEdges.find((edge) => edge.source === nodeId);
-
 
       const newEdges = [];
       if (sourceEdge && targetEdge) {
@@ -323,13 +336,16 @@ export const ReactFlowContextProvider = memo(({ children }) => {
         });
       }
 
-
       return prevEdges
         .filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
         .concat(newEdges);
     });
 
-    setNodes((prevNodes) => prevNodes.filter((node) => node.id !== nodeId));
+
+    setNodes((prevNodes) => {
+      const updatedNodes = prevNodes.filter((node) => node.id !== nodeId);
+      return updatedNodes;
+    });
   };
 
   return (

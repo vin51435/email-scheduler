@@ -50,7 +50,8 @@ npm install
 
 ### 3. Set up environment variables
 
-You need to set up environment variables for your application to work properly. Create a `.env` file in both the `frontend` and `backend` folders with the following content:
+You need to set up environment variables for your application to work properly. Create a `.env` file in `backend` folders with the following content:
+Save the .env file inside backend folder.
 
 #### .env file content:
 
@@ -58,19 +59,13 @@ You need to set up environment variables for your application to work properly. 
 MONGODB_URI=mongodbURI
 PORT=3002
 MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-email-password
-OAUTH_CLIENTID=your-oauth-client-id
-OAUTH_CLIENT_SECRET=your-oauth-client-secret
-OAUTH_REFRESH_TOKEN=your-oauth-refresh-token
-OAUTH_ACCESSTOKEN=your-oauth-access-token
+APP_PASSWORD=your-email-password
+
 ```
 
 - **MONGODB_URI**: MongoDB connection string for your database.
 - **MAIL_USERNAME**: Your email address for sending emails.
-- **MAIL_PASSWORD**: The password for your email account (may require an app-specific password).
-- **OAUTH_CLIENTID**, **OAUTH_CLIENT_SECRET**, **OAUTH_REFRESH_TOKEN**, **OAUTH_ACCESSTOKEN**: OAuth credentials for email sending using Gmail API.
-
-> **Important**: Ensure you securely store your credentials and do not expose them in public repositories.
+- **APP_PASSWORD**: The password for your email account, made using google's 2FA app specific password.
 
 ### 4. Running the Application
 
@@ -87,8 +82,6 @@ Once both the frontend and backend are running, you can access the application b
 ## Notes
 
 - Ensure that the MongoDB instance is running and accessible.
-- Make sure that you have valid OAuth credentials set up for email functionality.
-- If using Gmail API, enable the necessary permissions and scopes in the Google Cloud Console.
 
 ## License
 
@@ -98,7 +91,6 @@ Include any relevant license information for your project, such as MIT or GPL.
 
 - [Node.js](https://nodejs.org/) - JavaScript runtime used for the backend.
 - [MongoDB](https://www.mongodb.com/) - NoSQL database used for storing data.
-- [Gmail API](https://developers.google.com/gmail/api) - Used for email sending functionality.
-
-> Feel free to customize this README further based on your project's specific needs!
+- [Nodemailer](https://www.nodemailer.com/) - For providing mailing modules.
+- [Agenda](https://github.com/agenda/agenda) - For providing easy job scheduling.
 

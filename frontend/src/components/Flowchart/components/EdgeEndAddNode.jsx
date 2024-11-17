@@ -6,7 +6,6 @@ import { useReactFlowContext } from '../../../context/ReactFlowProvider';
 export default function EdgeEndAddNode(props) {
   const { openModal } = useReactFlowContext();
 
-
   const edgePath = `M${props.sourceX},${props.sourceY} L${props.sourceX},${props.sourceY + 50}`;
   const labelX = props.sourceX;
   const labelY = props.sourceY + 50;
