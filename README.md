@@ -1,5 +1,4 @@
-
-# Project Name
+# Node Scheduler
 
 A brief description of your project goes here. This section can include what the project does, its features, and any important details.
 
@@ -48,7 +47,7 @@ You need to set up environment variables for your application to work properly. 
 #### .env file content:
 
 ```bash
-MONGODB_URI=mongodb+srv://Assign:root-assign@cluster0.oau3jje.mongodb.net/emailScheduler?retryWrites=true&w=majority&appName=Cluster0
+MONGODB_URI=mongodbURI
 PORT=3002
 MAIL_USERNAME=your-email@gmail.com
 MAIL_PASSWORD=your-email-password
@@ -87,11 +86,11 @@ cd ../frontend
 npm start
 ```
 
-The frontend will run on `http://localhost:3000`.
+The frontend will run on `http://localhost:3001`.
 
 ### 5. Accessing the Application
 
-Once both the frontend and backend are running, you can access the application by navigating to `http://localhost:3000` in your web browser.
+Once both the frontend and backend are running, you can access the application by navigating to `http://localhost:3001` in your web browser.
 
 ## Notes
 
@@ -110,3 +109,4 @@ Include any relevant license information for your project, such as MIT or GPL.
 - [Gmail API](https://developers.google.com/gmail/api) - Used for email sending functionality.
 
 > Feel free to customize this README further based on your project's specific needs!
+
