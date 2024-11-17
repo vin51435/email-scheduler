@@ -67,39 +67,70 @@ export const ReactFlowContextProvider = memo(({ children }) => {
     }
 
     const newNodeId = `new-${Date.now()}`;
-    const newNodeWidth = 220;
-    const newNodeHeight = 59;
-
-    const isVertical = Math.abs(source.position.x - target.position.x) < newNodeWidth;
-    const spacing = isVertical ? newNodeHeight + 20 : newNodeWidth + 20;
 
     const newNodePosition = {
-      x: (source.position.x + target.position.x) / 2 - newNodeWidth / 2,
-      y: (source.position.y + target.position.y) / 2 - newNodeHeight / 2,
+
+      x: ((source.position.x + target.position.x) / 2),
+
+      y: ((source.position.y + target.position.y) / 2) + 60,
     };
+
+    const defaultData = {
+      coldEmail: {
+        label: 'Cold Email',
+        subject: 'Initial Email',
+        body: 'This is the body of the cold email.',
+      },
+      waitDelay: {
+        label: 'Wait/Delay',
+        delay: '5',
+      }
+    };
+
+    const newNodeData = type === 'coldEmail' ? defaultData.coldEmail : defaultData.waitDelay;
 
     const newNode = {
       id: newNodeId,
       position: newNodePosition,
-      data: { label: type === 'coldEmail' ? 'Cold Email' : 'Wait/Delay' },
+      data: newNodeData,
       type: type === 'coldEmail' ? 'ColdEmailNode' : 'WaitDelayNode',
     };
 
-    setNodes((nodes) => [
-      ...nodes.map(node => {
-        if (node.id === props.source) {
-          return { ...node, position: { ...node.position, y: node.position.y - spacing / 2, x: node.position.x - spacing / 2 } };
-        }
-        if (node.id === props.target) {
-          return { ...node, position: { ...node.position, y: node.position.y + spacing / 2, x: node.position.x + spacing / 2 } };
+    setNodes((nodes) => {
+
+      const updatedNodes = [
+        ...nodes.map((node) => {
+          if (node.id === props.source) {
+            return { ...node, position: { ...node.position } };
+          }
+          if (node.id === props.target) {
+            return { ...node, position: { ...node.position } };
+          }
+          return node;
+        }),
+        newNode,
+      ];
+
+
+      const newNodeYPosition = newNodePosition.y;
+
+      const finalNodes = updatedNodes.map((node) => {
+
+        if (node.position.y > newNodeYPosition) {
+          return {
+            ...node,
+            position: { ...node.position, y: node.position.y + 180 },
+          };
         }
         return node;
-      }),
-      newNode,
-    ]);
+      });
+
+      return finalNodes;
+    });
+
 
     setEdges((edges) => [
-      ...edges.filter(edge => edge.id !== props.id),
+      ...edges.filter((edge) => edge.id !== props.id),
       { id: `${props.source}-${newNodeId}`, source: props.source, target: newNodeId, type: 'addNode' },
       { id: `${newNodeId}-${props.target}`, source: newNodeId, target: props.target, type: 'addNode' },
     ]);
@@ -133,31 +164,34 @@ export const ReactFlowContextProvider = memo(({ children }) => {
 
     setEdges((edges) => [
       ...edges,
-      { id: `${props.id}${newNodeId}`, source: newNodeId, target: edges.find(edge => edge.data.label === 'sequenceStart')?.source, data: { label: 'Add Lead' }, type: 'default' }
+      { id: `${props.id}${newNodeId}`, source: newNodeId, target: 'sequenceStart', data: { label: 'Add Lead' }, type: 'default' }
     ]);
   };
 
   const ModalComponent = useCallback(() => {
     const handleInputChange = (event) => {
       const { name, value } = event.target;
-
+      console.log('name, value and props.id', name, value, nodeType?.props?.id);
       setNodes((prevNodes) =>
         prevNodes.map((node) => {
-          if (node.id !== nodeType.props.id) return node;
+          if (node?.id !== nodeType.props.id) return node;
 
-          let updatedData = { ...node.data };
+          const updatedNodeData = { ...node.data };
 
-          switch (name) {
-            case "emails":
-              updatedData[name] = value.split(",").map((email) => email.trim());
-              break;
-            default:
-              updatedData[name] = value;
+          try {
+            if (name === "emails") {
+              updatedNodeData[name] = value.split(",").map(email => email.trim());
+            } else {
+              updatedNodeData[name] = value;
+            }
+          } catch (error) {
+            console.error('Error updating node data', error);
+            return node;
           }
 
           return {
             ...node,
-            data: updatedData,
+            data: updatedNodeData,
           };
         })
       );
@@ -181,8 +215,8 @@ export const ReactFlowContextProvider = memo(({ children }) => {
             <h2>Select Node Type</h2>
             <span className='icon_span' onClick={closeModal}><MdOutlineCancelPresentation /></span>
           </div>
-          <button onClick={() => addNodeHandleNodeTypeSelect('coldEmail', nodeType.props)}>Cold Email Node</button>
-          <button onClick={() => addNodeHandleNodeTypeSelect('waitDelay', nodeType.props)}>Wait/Delay Node</button>
+          <button className='' onClick={() => addNodeHandleNodeTypeSelect('coldEmail', nodeType.props)}>Cold Email Node</button>
+          <button className='' onClick={() => addNodeHandleNodeTypeSelect('waitDelay', nodeType.props)}>Wait/Delay Node</button>
         </div>);
       case 'addLeadSource':
         return (<div className='react-modal'>
@@ -194,7 +228,7 @@ export const ReactFlowContextProvider = memo(({ children }) => {
             <textarea
               name="emails"
               placeholder="Enter email IDs separated by commas"
-              value={node?.data?.emails}
+              defaultValue={node?.data?.emails}
               onChange={handleInputChange}
               style={{ width: "100%", height: "100px" }}
             ></textarea>
@@ -212,7 +246,7 @@ export const ReactFlowContextProvider = memo(({ children }) => {
       case 'waitTime':
         return (<div className='react-modal'>
           <div className='rect-modal-header'>
-            <h2>Add new Lead Source</h2>
+            <h2>Wait Time</h2>
             <span className='icon_span' onClick={closeModal}><MdOutlineCancelPresentation /></span>
           </div>
           <div>
@@ -230,36 +264,38 @@ export const ReactFlowContextProvider = memo(({ children }) => {
           </div>
         </div>);
       case 'addColdEmail':
-        return (<div className='react-modal'>
-          <div className='rect-modal-header'>
-            <h2>Add new Lead Source</h2>
-            <span className='icon_span' onClick={closeModal}><MdOutlineCancelPresentation /></span>
-          </div>
-          <div>
-            <label htmlFor="subject">Subject:</label>
-            <input
-              id="subject"
-              name="subject"
-              placeholder="Email Subject"
-              value={node?.data?.subject}
-              onChange={handleInputChange}
-              className="nodrag"
-              style={{ width: '100%', marginBottom: '5px' }}
-            />
+        return (
+          <div className='react-modal'>
+            <div className='rect-modal-header'>
+              <h2>Cold Email</h2>
+              <span className='icon_span' onClick={closeModal}><MdOutlineCancelPresentation /></span>
+            </div>
+            <div>
+              <label htmlFor="subject">Subject:</label>
+              <input
+                id="subject"
+                name="subject"
+                placeholder="Email Subject"
+                defaultValue={node?.data?.subject ?? ''}
+                onChange={handleInputChange}
+                className="nodrag"
+                style={{ width: '100%', marginBottom: '5px' }}
+              />
 
-            <label htmlFor="body">Body:</label>
-            <textarea
-              id="body"
-              name="body"
-              placeholder="Email Body"
-              value={node?.data?.body}
-              onChange={handleInputChange}
-              className="nodrag"
-              style={{ width: '100%', height: '60px' }}
-            />
-            {/* <button onClick={() => addNewColdEmail(nodeType.props)}>Add new Cold Email</button> */}
+              <label htmlFor="body">Body:</label>
+              <textarea
+                id="body"
+                name="body"
+                placeholder="Email Body"
+                defaultValue={node?.data?.body ?? ''}
+                onChange={handleInputChange}
+                className="nodrag"
+                style={{ width: '100%', height: '60px' }}
+              />
+            </div>
           </div>
-        </div>);
+        );
+
       default:
         return null;
     }
@@ -292,7 +328,6 @@ export const ReactFlowContextProvider = memo(({ children }) => {
         .filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
         .concat(newEdges);
     });
-
 
     setNodes((prevNodes) => prevNodes.filter((node) => node.id !== nodeId));
   };

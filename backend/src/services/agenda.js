@@ -1,18 +1,12 @@
 const Agenda = require('agenda');
-const { MongoClient } = require('mongodb');
 const nodemailer = require('nodemailer');
-// const { transporter } = require('./mailer');
 
 let transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    type: 'OAuth2',
-    user: process.env.MAIL_USERNAME,
-    clientId: process.env.OAUTH_CLIENTID,
-    clientSecret: process.env.OAUTH_CLIENT_SECRET,
-    refreshToken: process.env.OAUTH_REFRESH_TOKEN,
-    accessToken: process.env.OAUTH_ACCESSTOKEN
-  }
+    user: process.env.MAIL_USERNAME, // Your Gmail address
+    pass: process.env.APP_PASSWORD, // App-specific password
+  },
 });
 
 transporter.verify((error, success) => {
@@ -25,14 +19,12 @@ transporter.verify((error, success) => {
   }
 });
 
-// const agenda = new Agenda({ mongo: mongoClientInstance.db('agendaDb') }
 const agenda = new Agenda({
   db: {
     address: process.env.MONGODB_URI,
     options: { useNewUrlParser: true }
   },
-  processEvery: '10 seconds'
-  // processEvery: '1 minute'
+  processEvery: '5 minute'
 });
 
 agenda.define('sendEmail', async (job) => {
@@ -42,8 +34,7 @@ agenda.define('sendEmail', async (job) => {
 
   try {
     const mailOptions = {
-      // from: '"Your App" <v3p51435@gmail.com>',
-      from: 'v3p51435@gmail.com',
+      from: process.env.MAIL_USERNAME,
       to,
       subject,
       text: body,
@@ -63,7 +54,6 @@ agenda.define('sendEmailReport', async () => {
   await agenda.start();
   await agenda.cancel({});
 
-  // await agenda.every('15 seconds', 'welcomeMessage', {});
   // await agenda.now('sendEmailReport');
   // await agenda.now('sendEmail', {
   //   to: 'v3p51435@gmail.com',

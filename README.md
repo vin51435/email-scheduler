@@ -22,6 +22,14 @@ cd your-project-name
 
 ### 2. Install dependencies
 
+#### Src:
+
+Install concurrently on src file
+
+```bash
+npm install
+```
+
 #### Frontend:
 
 Navigate to the `frontend` folder and install the necessary dependencies:
@@ -66,27 +74,11 @@ OAUTH_ACCESSTOKEN=your-oauth-access-token
 
 ### 4. Running the Application
 
-#### Start the Backend:
-
-Navigate to the `backend` folder and start the backend server:
+#### Start the project:
 
 ```bash
-cd ../backend
 npm start
 ```
-
-The backend will run on `http://localhost:3002`.
-
-#### Start the Frontend:
-
-In a separate terminal window, navigate to the `frontend` folder and start the frontend server:
-
-```bash
-cd ../frontend
-npm start
-```
-
-The frontend will run on `http://localhost:3001`.
 
 ### 5. Accessing the Application
 

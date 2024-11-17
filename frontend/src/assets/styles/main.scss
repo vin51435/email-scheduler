@@ -17,6 +17,122 @@
     border: 2px solid #f3f3f3;
     border-radius: 5px;
   }
+
+  .react-flow__node-SequenceStart {
+    cursor: auto;
+    pointer-events: none;
+  }
+
+  .react-flow__handle {
+    opacity: 0;
+    pointer-events: none !important;
+  }
+
+  .react-flow__edge {
+    color: black;
+  }
+}
+
+.btn {
+  appearance: button;
+  background-color: #1899d6;
+  border: solid transparent;
+  border-radius: 16px;
+  border-width: 0 0 4px;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: din-round, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  line-height: 20px;
+  margin: 0;
+  outline: none;
+  overflow: visible;
+  padding: 10px 13px;
+  text-align: center;
+  text-transform: uppercase;
+  touch-action: manipulation;
+  transform: translateZ(0);
+  transition: filter 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: 100%;
+  &:after {
+    background-clip: padding-box;
+    background-color: #1cb0f6;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    bottom: -4px;
+    content: '';
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+
+  &,
+  &:focus {
+    user-select: auto;
+  }
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
+  }
+
+  &:disabled {
+    cursor: auto;
+  }
+
+  &:active {
+    border-width: 4px 0 0;
+    background: none;
+  }
+}
+
+.btn2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+  border-radius: 6px;
+  border: none;
+
+  color: #fff;
+  background: linear-gradient(180deg, #4b91f7 0%, #367af6 100%);
+  background-origin: border-box;
+  box-shadow: 0px 0.5px 1.5px rgba(54, 122, 246, 0.25),
+    inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  cursor: pointer;
+  &:focus {
+    box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2),
+      0px 0.5px 1.5px rgba(54, 122, 246, 0.25),
+      0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
+    outline: 0;
+  }
+}
+
+.edgebutton {
+  display: flex;
+  cursor: pointer;
+  line-height: 0.72rem;
+  margin: 0;
+  padding: 5px;
+  background-color: white;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 900;
 }
 
 .node {
@@ -116,13 +232,14 @@
   }
 
   &.sequence-start {
+    pointer-events: none;
+    cursor: not-allowed;
     .header {
       text-align: center;
       margin: auto;
       padding: 0.5rem 0.8rem;
     }
   }
-
   &.cold-email {
     .icon_span {
       border: 1px solid purple;
@@ -153,15 +270,6 @@
   }
 }
 
-.react-flow__handle {
-  opacity: 0;
-  pointer-events: none !important;
-}
-
-.react-flow__edge {
-  color: black;
-}
-
 .ReactModal__Overlay {
   display: flex;
   align-items: center;
@@ -174,10 +282,15 @@
     background-color: #f3f3f3;
     border-radius: 4px;
     padding: 1rem 1.5rem;
+    button {
+      margin: 0rem 1rem 0rem auto;
+      cursor: pointer;
+    }
     .rect-modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 1rem;
       h2 {
         margin: 0;
         padding: 0;

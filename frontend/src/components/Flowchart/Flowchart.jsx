@@ -47,7 +47,7 @@ const initialNodes = [
     height: 68
   },
   {
-    id: "1.1",
+    id: "sequenceStart",
     position: {
       x: 262,
       y: 180
@@ -62,6 +62,7 @@ const initialNodes = [
       width: 220,
       height: 50
     },
+    selectable: false,
     width: 220,
     height: 50
   },
@@ -148,8 +149,8 @@ const initialNodes = [
 ];
 
 const initialEdges = [
-  { id: 'e1-2', source: '1', target: '1.1', data: { label: 'leadSource', count: 1 }, type: 'default' },
-  { id: 'e1-1.1', source: '1.1', target: '2', data: { label: 'sequenceStart', count: 1 }, type: 'addNode' },
+  { id: 'e1-2', source: '1', target: 'sequenceStart', data: { label: 'leadSource', count: 1 }, type: 'default' },
+  { id: 'e1-1.1', source: 'sequenceStart', target: '2', data: { label: 'sequenceStart', count: 1 }, type: 'addNode' },
   { id: 'e1-3', source: '2', target: '3', data: { label: '+' }, type: 'addNode' },
   { id: 'e1-4', source: '3', target: '4', data: { label: '+' }, type: 'addNode' },
   { id: 'e1-52', source: '4', target: '4', data: { label: '+' }, type: 'endAddButton' },
@@ -186,32 +187,18 @@ export default function Flowchart() {
     [setEdges],
   );
 
-  const sendDataToBackend = async () => {
+  const saveWorkflow = async () => {
     try {
-      console.log('sendDataToBackend: Start');
-
-      // Validate data
-      const hasLeadSourceNode = nodes.some((node) => node.type === 'LeadSourceNode');
-      console.log('sendDataToBackend: Validation complete, hasLeadSourceNode:', hasLeadSourceNode);
-
-      if (!hasLeadSourceNode) {
+      const hasLeadSource = nodes.some((node) => node.type === 'LeadSourceNode');
+      if (!hasLeadSource) {
         throw new Error('No LeadSourceNode found. Please add a Lead Source node before proceeding.');
       }
 
-      // Prepare payload
       const payload = { nodes, edges };
-      console.log('sendDataToBackend: Payload prepared', payload);
-
-      // Send data to backend
       const response = await axios.post('http://localhost:3002/api/v1/submit-workflow', payload);
-      console.log('sendDataToBackend: Data sent, response:', response.data);
-
       alert('Workflow saved successfully!');
     } catch (error) {
-      console.error('sendDataToBackend: Error sending data:', error.message);
       alert(`Error: ${error.message}`);
-    } finally {
-      console.log('sendDataToBackend: End');
     }
   };
 
@@ -219,7 +206,7 @@ export default function Flowchart() {
     <div className='main'>
       <div className='react-flow-controls'>
         <div className='react-flow-controls-save'>
-          <button onClick={() => sendDataToBackend()}>Save Workflow</button>
+          <button className='btn2' onClick={() => saveWorkflow()}>Save Workflow</button>
         </div>
       </div>
       <div className='react-flow_container' style={{ width: '100%', height: '85%' }}>
@@ -236,6 +223,7 @@ export default function Flowchart() {
         >
           <Panel position="top-right">
             <button
+              className='btn2'
               onClick={() =>
                 getLayoutedElements({
                   'elk.algorithm': 'layered',
@@ -247,9 +235,9 @@ export default function Flowchart() {
             </button>
 
           </Panel>
-          <Panel position="top-left">
+          {/* <Panel position="top-left">
             <button onClick={onClick} className="btn-add">Add Node</button>
-          </Panel>
+          </Panel> */}
           <Controls />
           <MiniMap />
           <Background variant="dots" gap={12} size={1} />
