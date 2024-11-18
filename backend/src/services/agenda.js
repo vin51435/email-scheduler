@@ -50,10 +50,15 @@ agenda.define('sendEmailReport', async () => {
   await agenda.schedule('in 30 seconds', 'sendEmail', { to: 'v3p51435@gmail.com', subject: 'Report', body: 'Report' });
 });
 
+agenda.define('Stay alive', async (job) => {
+  console.log('job executed:', new Date());
+});
+
 (async () => {
   await agenda.start();
   await agenda.cancel({});
 
+  agenda.every('1 hour', 'Stay alive');
   // await agenda.now('sendEmailReport');
   // await agenda.now('sendEmail', {
   //   to: 'v3p51435@gmail.com',

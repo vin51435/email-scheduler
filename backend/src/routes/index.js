@@ -23,4 +23,8 @@ router.post(
   scheduleWorkflow
 );
 
+router.get('/health', (req, res) => {
+  res.status(200).send('Server is up and running!');
+});
+
 module.exports = router;
