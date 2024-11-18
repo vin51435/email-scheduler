@@ -10,17 +10,24 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'http://192.168.0.155:3000', 'http://localhost:3001', 'http://192.168.0.155:3001'
+  'http://192.168.0.155:3000',
+  'http://localhost:3001',
+  'http://192.168.0.155:3001',
+  'https://email-scheduler-tz4t.onrender.com',
+  'https://email-scheduler-ashen.vercel.app/'
 ];
+
 app.use(cors({
   origin: (origin, callback) => {
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Allow requests with no origin (like Render health checks)
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
 }));
+
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
