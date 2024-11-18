@@ -195,7 +195,10 @@ export default function Flowchart() {
       }
 
       const payload = { nodes, edges };
-      const response = await axios.post('http://localhost:3002/api/v1/submit-workflow', payload);
+      const url = import.meta.env.VITE_DEVELOPMENT === 'production'
+        ? 'https://email-scheduler-tz4t.onrender.com/api/v1/submit-workflow'
+        : 'http://localhost:3002/api/v1/submit-workflow';
+      const response = await axios.post(url, payload);
       alert('Workflow saved successfully!');
     } catch (error) {
       alert(`Error: ${error.message}`);
