@@ -43,9 +43,10 @@ export const ReactFlowContextProvider = memo(({ children }) => {
 
     const newNodeId = `new-${Date.now()}`;
     const newNodePosition = {
-      x: sourceNode.position.x,
-      y: (sourceNode.position.y + sourceNode.width),
+      x: sourceNode?.position?.x,
+      y: (sourceNode?.position?.y + (isNaN(sourceNode?.measured?.width) ? 120 : sourceNode?.measured?.width)),
     };
+
     const newNodeData = type === 'coldEmail' ? defaultData.coldEmail : defaultData.waitDelay;
 
     const newNode = {
@@ -79,8 +80,8 @@ export const ReactFlowContextProvider = memo(({ children }) => {
     const newNodeId = `new-${Date.now()}`;
 
     const newNodePosition = {
-      x: ((source.position.x + target.position.x) / 2),
-      y: ((source.position.y + target.position.y) / 2) + 60,
+      x: ((source?.position?.x + target?.position?.x) / 2),
+      y: ((source?.position?.y + target?.position?.y) / 2) + 60,
     };
 
     const newNodeData = type === 'coldEmail' ? defaultData.coldEmail : defaultData.waitDelay;
