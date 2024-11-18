@@ -14,7 +14,7 @@ const allowedOrigins = [
   'http://localhost:3001',
   'http://192.168.0.155:3001',
   'https://email-scheduler-tz4t.onrender.com',
-  'https://email-scheduler-ashen.vercel.app/'
+  'https://email-scheduler-ashen.vercel.app'
 ];
 
 app.use(cors({
